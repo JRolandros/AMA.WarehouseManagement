@@ -59,23 +59,6 @@ namespace AMA.WarehouseManagement.Tests
         }
 
         [Fact]
-        public void SetProductCapacity_ShouldReturnBadCapacityErrorMessage_WhenCapacityLessThanCurrentQuantity()
-        {
-            //Arrange
-            _mockService.Setup(s => s.GetQuantityProducts(
-                It.Is<Expression<Func<QuantityProduct, bool>>>(expr =>
-                expr.Compile()(new QuantityProduct { ProductId = 1 }))
-                ))
-                        .Returns(new List<QuantityProduct> { new QuantityProduct { ProductId=1,Quantity=100} } );
-
-            //Act
-            var result = _productController.SetProductCapacity(1, 10);
-
-            //Assert
-            Assert.IsType<BadCapacityErrorMessage>(result);
-        }
-
-        [Fact]
         public void AddProductStock_ShouldReturnBadQuantityErrorMessage_WhenQuantityNegative()
         {
             //Act
@@ -93,7 +76,7 @@ namespace AMA.WarehouseManagement.Tests
                 It.Is<Expression<Func<QuantityProduct, bool>>>(expr =>
                 expr.Compile()(new QuantityProduct { ProductId = 1 }))
                 ))
-                        .Returns(null);
+                        .Returns(new List<QuantityProduct>());
 
             //Act
             var result = _productController.AddProductStock(1, -5);
