@@ -32,17 +32,20 @@
 <div class="card-footer d-flex align-items-center">
   <ul class="pagination mb-0 ms-auto" >
     <li class="page-item" [class.disabled]="offset === 0">
-      <button class="page-link" (click)="firstPage()" [disabled]="offset === 0">First</button>
+      <button class="page-link" (click)="firstPage()" >First</button>
     </li>
     <li class="page-item" [class.disabled]="offset === 0">
-      <button class="page-link" (click)="prevPage()" [disabled]="offset === 0">Previous</button>
+      <button class="page-link" (click)="prevPage()" >Previous</button>
     </li>
-    <span class="mx-2">Page {{ currentPage + 1 }} / {{ totalPages }}</span>
-    <li class="page-item">
-      <button class="page-link" (click)="nextPage()" [disabled]="isLastPage()">Next</button>
+    <div class="page-item no-border-no-bg" [class.disabled]="'true'">
+      <span class="page-link no-border-no-bg mx-2">Page {{ currentPage + 1 }} / {{ totalPages }}</span>
+    </div>
+
+    <li class="page-item" [class.disabled]="isLastPage()">
+      <button class="page-link" (click)="nextPage()" >Next</button>
     </li>
-    <li class="page-item">
-      <button class="page-link" (click)="lastPage()" [disabled]="isLastPage()">Last</button>
+    <li class="page-item" [class.disabled]="isLastPage()">
+      <button class="page-link" (click)="lastPage()" >Last</button>
     </li>
 
   </ul>
