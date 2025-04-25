@@ -1,0 +1,51 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Products</h5>
+      <small class="text-light">Showing {{ offset + 1 }} - {{ offset + products.length }}</small>
+    </div>
+
+    <div class="card-body p-0">
+      <table class="table table-bordered table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+    <tbody>
+    @for (p of products; track p.productId)
+    {
+      <tr>
+        <td>{{ p.productId }}</td>
+        <td>{{ p.productName }}</td>
+        <td>{{ p.productDescription }}</td>
+        <td>{{ p.productCategory }}</td>
+        <td>{{ p.price.toFixed(2) }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+<div class="card-footer d-flex align-items-center">
+  <ul class="pagination mb-0 ms-auto" >
+    <li class="page-item" [class.disabled]="offset === 0">
+      <button class="page-link" (click)="firstPage()" [disabled]="offset === 0">First</button>
+    </li>
+    <li class="page-item" [class.disabled]="offset === 0">
+      <button class="page-link" (click)="prevPage()" [disabled]="offset === 0">Previous</button>
+    </li>
+    <span class="mx-2">Page {{ currentPage + 1 }} / {{ totalPages }}</span>
+    <li class="page-item">
+      <button class="page-link" (click)="nextPage()" [disabled]="isLastPage()">Next</button>
+    </li>
+    <li class="page-item">
+      <button class="page-link" (click)="lastPage()" [disabled]="isLastPage()">Last</button>
+    </li>
+
+  </ul>
+</div>
+
+</div>

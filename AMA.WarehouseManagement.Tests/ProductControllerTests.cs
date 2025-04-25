@@ -257,6 +257,37 @@ namespace AMA.WarehouseManagement.Tests
             Assert.IsType<OkResult>(result);
         }
 
+        [Fact]
+        public void GetPage_ShouldReturnDataRangeByOffsetAndLimit()
+        {
+            //Arrange
+            int offset=3, limit=5;
+            _mockService.Setup(s => s.GetProductRange(0, 0))
+                .Returns(new List<Product>
+                {
+                    new Product { ProductId = 1 },
+                    new Product { ProductId = 2 },
+                    new Product { ProductId = 3 },
+                    new Product { ProductId = 4 },
+                    new Product { ProductId = 5 },
+                    new Product { ProductId = 6 },
+                    new Product { ProductId = 7 },
+                    new Product { ProductId = 8 },
+                    new Product { ProductId = 9 },
+                    new Product { ProductId = 10 },
+                    new Product { ProductId = 11 },
+                    new Product { ProductId = 12 }
+                });
+
+            //Act
+            var result=_productController.GetPage(offset, limit);
+
+            //Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var dtos = Assert.IsAssignableFrom<IEnumerable<ProductDto>>(okResult.Value);
+            Assert.True(!dtos.Any(x => x.ProductId < 3 || x.ProductId > 8));
+
+        }
 
     }
 }

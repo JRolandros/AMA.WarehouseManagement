@@ -1,4 +1,6 @@
 
+using AMA.WarehouseManagement.Application;
+
 namespace AMA.WarehouseManagement.API
 {
     public class Program
@@ -10,9 +12,26 @@ namespace AMA.WarehouseManagement.API
             // Add services to the container.
 
             builder.Services.AddControllers();
+               
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            //Dependency injection
+            builder.Services.AddApplicationModule();
+
+
+            //Adding cors to enable cross origin
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    o =>
+                    {
+                        o.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                    });
+            });
 
             var app = builder.Build();
 
@@ -25,8 +44,9 @@ namespace AMA.WarehouseManagement.API
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
+            app.UseCors();
 
             app.MapControllers();
 
