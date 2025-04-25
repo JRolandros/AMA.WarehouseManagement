@@ -1,8 +1,13 @@
-﻿using AMA.WarehouseManagement.Application.Services;
+﻿using AMA.WarehouseManagement.API.Common;
+using AMA.WarehouseManagement.Application.Models;
+using AMA.WarehouseManagement.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AMA.WarehouseManagement.API.Controllers
+
 {
+    [Route("api/Product")]
+    [ApiController]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _service;
@@ -11,25 +16,58 @@ namespace AMA.WarehouseManagement.API.Controllers
             _service = productService;
         }
 
-
-        public object AddProductStock(int productId, int v)
+        public IActionResult GetProducts(int quantity)
         {
-            throw new NotImplementedException();
+            if (quantity <= 0)
+            {
+                return new BadQuantityErrorMessage();
+            }
+
+            var products = _service.GetQuantityProducts(x => x.Quantity > quantity);
+            var warehouseEntities= products.Select(x => new WarehouseEntity { ProductId = x.ProductId, Quantity = x.Quantity });
+
+            return new OkObjectResult(warehouseEntities);
         }
 
-        public object DispatchProduct(int v1, int v2)
+        public IActionResult AddProductStock(int productId, int qty)
         {
-            throw new NotImplementedException();
+            var qtyProduct=_service.GetQuantityProducts(x=>x.ProductId == productId).FirstOrDefault();
+            var cptyProduct=_service.GetCapacityProducts(x=>x.ProductId==productId).FirstOrDefault();
+
+            if(qtyProduct==null || cptyProduct==null || qty<=0 ||qtyProduct.Quantity+qty>cptyProduct.Capacity )
+                return new BadQuantityErrorMessage();
+
+            _service.SetProductQuantity(productId, qtyProduct.Quantity + qty);
+
+            return new OkResult();
+
         }
 
-        public object GetProducts(int v)
+        public IActionResult DispatchProduct(int productId, int qty)
         {
-            throw new NotImplementedException();
+            var qtyProduct = _service.GetQuantityProducts(x => x.ProductId == productId).FirstOrDefault();
+
+            if (qtyProduct == null || qty <= 0 || qtyProduct.Quantity<qty)
+                return new BadQuantityErrorMessage();
+
+            _service.SetProductQuantity(productId, qtyProduct.Quantity-qty);
+
+            return new OkResult();
         }
 
-        public object SetProductCapacity(int v1, int v2)
+        public IActionResult SetProductCapacity(int productId, int capacity)
         {
-            throw new NotImplementedException();
+            var qtyProduct = _service.GetQuantityProducts(x => x.ProductId == productId).FirstOrDefault();
+
+            if (qtyProduct == null || capacity <= 0)
+                return new BadQuantityErrorMessage();
+
+            if (qtyProduct.Quantity > capacity)
+                return new BadCapacityErrorMessage();
+
+            _service.SetProductCapacity(productId, capacity);
+
+            return new OkResult();
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿namespace AMA.WarehouseManagement.API.Common
+﻿
+using Microsoft.AspNetCore.Mvc;
+
+namespace AMA.WarehouseManagement.API.Common
 {
-    public class BadQuantityErrorMessage : IStatusCodeHttpResult
+    public class BadQuantityErrorMessage : BadRequestObjectResult 
     {
-        public string Message { get; } 
-        public BadQuantityErrorMessage()
+        public BadQuantityErrorMessage():base(new {ErrorCode=StatusCodes.Status400BadRequest,Message= "Product quantity error !" })
         {
-            Message = "Product quantity error !";
         }
-        public int? StatusCode => StatusCodes.Status400BadRequest;
+        
     }
 }

@@ -79,7 +79,24 @@ namespace AMA.WarehouseManagement.Tests
                         .Returns(new List<QuantityProduct>());
 
             //Act
-            var result = _productController.AddProductStock(1, -5);
+            var result = _productController.AddProductStock(1, 5);
+
+            //Assert
+            Assert.IsType<BadQuantityErrorMessage>(result);
+        }
+
+        [Fact]
+        public void AddProductStock_ShouldReturnBadQuantityErrorMessage_WhenNoCapacityProduct()
+        {
+            //Arrange
+            _mockService.Setup(s => s.GetCapacityProducts(
+                It.Is<Expression<Func<CapacityProduct, bool>>>(expr =>
+                expr.Compile()(new CapacityProduct { ProductId = 1 }))
+                ))
+                        .Returns(new List<CapacityProduct>());
+
+            //Act
+            var result = _productController.AddProductStock(1, 5);
 
             //Assert
             Assert.IsType<BadQuantityErrorMessage>(result);
@@ -162,6 +179,30 @@ namespace AMA.WarehouseManagement.Tests
 
             //Assert
             Assert.IsType<BadQuantityErrorMessage>(result);
+        }
+
+        [Fact]
+        public void DispatchProduct_ShouldCallServiceWithCorrectQty()
+        {
+            // Arrange
+            int productId = 1;
+            int expectedQty = 55;
+
+            _mockService.Setup(s => s.GetQuantityProducts(
+                It.Is<Expression<Func<QuantityProduct, bool>>>(expr =>
+                expr.Compile()(new QuantityProduct { ProductId = 1 }))
+                ))
+                        .Returns(new List<QuantityProduct> { new QuantityProduct { ProductId = 1, Quantity = 60 } });
+
+
+            // Act
+            var result = _productController.DispatchProduct(productId, 5);
+
+
+            // Assert
+            _mockService.Verify(s => s.SetProductQuantity(productId, expectedQty), Times.Once);
+
+            Assert.IsType<OkResult>(result);
         }
 
         [Fact]

@@ -20,6 +20,11 @@ namespace AMA.WarehouseManagement.Application.Services
             throw new NotImplementedException();
         }
 
+        public void SetProductCapacity(int productId, int capacity)
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetProductQuantity(int productId, int expectedQty)
         {
             throw new NotImplementedException();

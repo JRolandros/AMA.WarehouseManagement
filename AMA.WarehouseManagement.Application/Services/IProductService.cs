@@ -12,6 +12,7 @@ namespace AMA.WarehouseManagement.Application.Services
     {
         IEnumerable<CapacityProduct> GetCapacityProducts(Expression<Func<CapacityProduct, bool>> expression);
         IEnumerable<QuantityProduct> GetQuantityProducts(Expression<Func<QuantityProduct, bool>> expression);
-        void SetProductQuantity(int productId, int expectedQty);
+        void SetProductQuantity(int productId, int qty);
+        void SetProductCapacity(int productId, int capacity);
     }
 }

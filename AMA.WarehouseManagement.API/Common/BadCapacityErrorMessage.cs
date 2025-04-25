@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AMA.WarehouseManagement.API.Common
 {
-    public class BadCapacityErrorMessage : IStatusCodeHttpResult
+    public class BadCapacityErrorMessage : BadRequestObjectResult
     {
-        public string Message { get; }
-        public BadCapacityErrorMessage()
+        public BadCapacityErrorMessage():base(new {ErrorCode=StatusCodes.Status400BadRequest,Message= "Product capacity error !" })
         {
-            Message = "Product capacity error";
         }
-
-        public int? StatusCode => StatusCodes.Status400BadRequest;
     }
 }
